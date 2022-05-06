@@ -1,7 +1,6 @@
 const arxiv = require('arxiv-api');
 const winkNLP = require('wink-nlp');
 const its = require('wink-nlp/src/its.js');
-const as = require('wink-nlp/src/as.js');
 const model = require('wink-eng-lite-model');
 const nlp = winkNLP(model);
 const axios = require('axios');
@@ -27,22 +26,6 @@ Array.prototype.zip = function (...args) {
 }
 
 const SearchMax = 100;
-
-// async function tweetWithImg(text, retry = 0) {
-//   const mediaId = await TwitterClient.v1.uploadMedia('./media.png').catch(e => {
-//     console.log(e);
-//     return null;
-//   });
-//   if (!mediaId) {
-//     console.log('media id is not found');
-//     if (retry < 3) {
-//       return tweetWithImg(text, retry + 1);
-//     } else {
-//       return console.log(`tweet failed ${text}`);
-//     }
-//   }
-//   await TwitterClient.v2.tweet({ "text": text, "media": { "media_ids": [mediaId] } }).catch(e => console.log(e));
-// }
 
 async function main(startTime) {
   const papers = await arxiv.search({
@@ -78,7 +61,6 @@ async function main(startTime) {
     })).data.text;
     if (!summaryJP) return;
     await createImage(summaryJP); // creat at [./media.png]
-    // tweetWithImg(`${title}\n${paper.id}\nkeywords: ${top4Propn.join(', ')}`);
     const mediaId = await TwitterClient.v1.uploadMedia('./media.png').catch(e => console.log(e));
     if (mediaId) {
       const text = `${title}\n${paper.id}\nkeywords: ${top4Propn.join(', ')}`;
@@ -94,7 +76,6 @@ async function main(startTime) {
     }
     await sleep(60 * 1000);
   }
-
   return papers[0] ? new Date(papers[0].published) : startTime;
 }
 
