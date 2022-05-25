@@ -54,9 +54,10 @@ async function main(startTime) {
       .reduce((acc, v) => {
         acc[v] = (acc[v] || 0) + 1;
         return acc;
-      }, {})
+      }, {});
+    const urlEscapedSummary = encodeURI(escapedSummary).replace(/\&/g, '%26'); // A&B -> A%26B
     const top4Propn = Object.entries(frequentPropn).sort((a, b) => b[1] - a[1]).map(_ => _[0]).slice(0, 4);
-    const transResult = await axios.get(`https://script.google.com/macros/s/${process.env.Google_Token_Api}/exec?text=${encodeURI(escapedSummary)}&source=en&target=ja`)
+    const transResult = await axios.get(`https://script.google.com/macros/s/${process.env.Google_Token_Api}/exec?text=${urlEscapedSummary}&source=en&target=ja`)
       .catch(e => {
         console.log(e);
         return { data: { text: null } }
